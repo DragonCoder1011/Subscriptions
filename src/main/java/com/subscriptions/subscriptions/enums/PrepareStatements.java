@@ -1,0 +1,27 @@
+package com.subscriptions.subscriptions.enums;
+
+public enum PrepareStatements {
+
+    CREATESILVERTABLE("CREATE TABLE IF NOT EXISTS SILVER(NAME VARCHAR(16) NOT NULL, ID INT(2), PRIMARY KEY (NAME))"),
+    CREATEGOLDTABLE("CREATE TABLE IF NOT EXISTS GOLD(NAME VARCHAR(16) NOT NULL, ID INT(2), PRIMARY KEY (NAME))"),
+    CREATEPLATINUMTABLE("CREATE TABLE IF NOT EXISTS PLATINUM(NAME VARCHAR(16) NOT NULL, ID INT(2), PRIMARY KEY (NAME))"),
+
+    GETSILVERDATA("SELECT * FROM SILVER WHERE NAME =?"),
+    SETSILVERDATA("INSERT INTO SILVER(NAME, ID) VALUES (?,?)"),
+
+    GETGOLDDATA("SELECT * FROM GOLD WHERE NAME =?"),
+    SETGOLDDATA("INSERT INTO GOLD(NAME, ID) VALUES (?,?)"),
+
+    GETPLATINUMDATA("SELECT * FROM PLATINUM WHERE NAME =?"),
+    SETPLATINUMDATA("INSERT INTO PLATINUM(NAME, ID) VALUES (?,?)");
+
+    String statement;
+
+    PrepareStatements(String statement) {
+        this.statement = statement;
+    }
+
+    public String getStatement() {
+        return statement;
+    }
+}

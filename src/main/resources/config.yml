@@ -1,0 +1,21 @@
+# > Database Options <
+host: "94.130.143.221"
+port: 3306
+database: "s152_otherdb"
+username: "u152_MXLZuBc9EN"
+password: "FT4OYY@4HRl2lnblq.MBuqe="
+
+# > Subscription Options <
+
+#This is how much money the silver subscription costs
+silver-price: 200000
+
+#This is how much money the gold subscription costs
+gold-price: 400000
+
+#This is how much money the platinum subscription costs
+platinum-price: 600000
+
+#This option edits the chance for gold:
+gold-drop-rate: 0.03
+
