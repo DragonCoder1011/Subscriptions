@@ -46,21 +46,21 @@ public class SubscriptionListeners implements Listener {
                 }
 
                 if (item.equalsIgnoreCase(StringUtils.format("&7Silver &eSubscription"))) {
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(Subscriptions.plugin, () -> {
+                    SubThreads.globalThread.execute(() -> {
                         SubscriptionsShopAPI.getInstance().giveSilver(player);
-                    }, 1);
+                    });
                 }
 
                 if (item.equalsIgnoreCase(StringUtils.format("&6Gold &eSubscription"))) {
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(Subscriptions.plugin, () -> {
+                    SubThreads.globalThread.execute(() -> {
                         SubscriptionsShopAPI.getInstance().giveGold(player);
-                    }, 1);
+                    });
                 }
 
                 if (item.equalsIgnoreCase(StringUtils.format("&8Platinum &eSubscription"))) {
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(Subscriptions.plugin, () -> {
+                    SubThreads.globalThread.execute(() -> {
                         SubscriptionsShopAPI.getInstance().givePlatinum(player);
-                    }, 1);
+                    });
                 }
             }
         }

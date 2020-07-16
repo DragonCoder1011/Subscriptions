@@ -30,8 +30,6 @@ public class HikariInsertOptions {
                 }
             }
         } catch (SQLException ex) {
-            Bukkit.getConsoleSender().sendMessage(StringUtils.format("&c***If you're getting this message, warning database hasn't been pinged in"
-                    + "a while! Ignoring it!***"));
             ex.printStackTrace();
         }
 
@@ -55,8 +53,6 @@ public class HikariInsertOptions {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            Bukkit.getConsoleSender().sendMessage(StringUtils.format("&c***If you're getting this message, warning database hasn't been pinged in"
-                    + "a while! Ignoring it!***"));
         }
     }
 
@@ -77,8 +73,6 @@ public class HikariInsertOptions {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            Bukkit.getConsoleSender().sendMessage(StringUtils.format("&c***If you're getting this message, warning database hasn't been pinged in"
-                    + "a while! Ignoring it!***"));
         }
     }
 
@@ -87,7 +81,7 @@ public class HikariInsertOptions {
             try (PreparedStatement ps = connection.prepareStatement(PrepareStatements.GETPLATINUMDATA.getStatement())) {
                 ps.setString(1, player.getName());
                 if (!this.hasSubscription(player.getName(), "PLATINUM")) {
-                    try (PreparedStatement insert =connection.prepareStatement(PrepareStatements.SETPLATINUMDATA.getStatement())) {
+                    try (PreparedStatement insert = connection.prepareStatement(PrepareStatements.SETPLATINUMDATA.getStatement())) {
                         insert.setString(1, player.getName());
                         insert.setInt(2, 0);
                         insert.executeUpdate();
@@ -99,8 +93,6 @@ public class HikariInsertOptions {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            Bukkit.getConsoleSender().sendMessage(StringUtils.format("&c***If you're getting this message, warning database hasn't been pinged in"
-                    + "a while! Ignoring it!***"));
         }
     }
 }

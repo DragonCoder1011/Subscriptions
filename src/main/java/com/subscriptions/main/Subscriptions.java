@@ -35,6 +35,7 @@ public class Subscriptions extends JavaPlugin {
 
     public void onDisable() {
         SubThreads.globalThread.shutdown();
+        SubscriptionsHikari.getInstance().disconnect();
     }
 
     private void registerCommands() {

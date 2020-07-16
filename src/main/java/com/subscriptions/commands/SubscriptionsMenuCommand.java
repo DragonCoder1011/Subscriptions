@@ -1,8 +1,7 @@
 package com.subscriptions.commands;
 
 import com.subscriptions.inventories.SubscriptionsMenu;
-import com.subscriptions.main.Subscriptions;
-import org.bukkit.Bukkit;
+import com.subscriptions.threads.SubThreads;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -16,7 +15,7 @@ public class SubscriptionsMenuCommand extends BukkitCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Subscriptions.plugin, () -> {
+        SubThreads.globalThread.execute(() -> {
             if (!(sender instanceof Player)) {
                 System.out.println("Only players can use this command!");
                 return;
@@ -25,7 +24,7 @@ public class SubscriptionsMenuCommand extends BukkitCommand {
             Player player = (Player) sender;
             SubscriptionsMenu.getInstance().init(player);
             player.playSound(player.getLocation(), Sound.CHEST_OPEN, 1, 1);
-        }, 1);
+        });
 
         return true;
     }

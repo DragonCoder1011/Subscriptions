@@ -1,8 +1,10 @@
 package com.subscriptions.subscriptions.connection;
 
 import com.subscriptions.config.ConfigManager;
+import com.subscriptions.string.StringUtils;
 import com.subscriptions.subscriptions.enums.PrepareStatements;
 import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,12 +35,14 @@ public class SubscriptionsHikari {
         dataSource.addDataSourceProperty("user", userName);
         dataSource.addDataSourceProperty("password", password);
         registerTables();
+        Bukkit.getConsoleSender().sendMessage(StringUtils.format("&eSubscriptions &aDatabase &7has made a &aconnection&7!"));
 
     }
 
     public void disconnect() {
         if (dataSource != null) {
             dataSource.close();
+            Bukkit.getConsoleSender().sendMessage(StringUtils.format("&eSubscriptions &aDatabase &7has &cdisconnected&7!"));
         }
     }
 
