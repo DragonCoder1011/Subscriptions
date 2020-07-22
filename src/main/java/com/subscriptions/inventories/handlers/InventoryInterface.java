@@ -1,4 +1,4 @@
-package com.subscriptions.inventories;
+package com.subscriptions.inventories.handlers;
 
 public interface InventoryInterface {
 

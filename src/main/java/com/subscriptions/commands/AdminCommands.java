@@ -1,8 +1,10 @@
 package com.subscriptions.commands;
 
+import com.subscriptions.config.ConfigManager;
+import com.subscriptions.file.PlayerFile;
 import com.subscriptions.string.StringUtils;
 import com.subscriptions.subscriptions.api.SubscriptionsShopAPI;
-import com.subscriptions.subscriptions.connection.HikariInsertOptions;
+import com.subscriptions.subscriptions.connection.SubscriptionsHikariInsertOptions;
 import com.subscriptions.threads.SubThreads;
 import com.subscriptions.vault.PermissionsUtil;
 import org.bukkit.Bukkit;
@@ -10,9 +12,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class AdminCommands extends BukkitCommand {
 
     private final String prefix = StringUtils.format("&c&lKitPvP &8» ");
+    private final List<String> silver = Collections.synchronizedList(new ArrayList<>());
+    private final List<String> gold = Collections.synchronizedList(new ArrayList<>());
+    private final List<String> platinum =Collections.synchronizedList(new ArrayList<>());
 
     public AdminCommands(String name) {
         super(name);
@@ -53,7 +62,9 @@ public class AdminCommands extends BukkitCommand {
                         return;
                     }
 
-                    HikariInsertOptions.getInstance().setSilverPlayer(target);
+                    SubscriptionsHikariInsertOptions.getInstance().setSilverPlayer(target);
+                    silver.add(target.getName());
+                    set(silver, "Silver");
                     PermissionsUtil.givePermission(target, "essentials.kits.viking");
                     target.sendMessage(prefix + StringUtils.format("&aYou were successfully given the &7Silver &eSubscription&a!"));
                     sender.sendMessage(prefix + StringUtils.format("&aYou have successfully given this player &7Silver &eSubscription&a!"));
@@ -65,7 +76,9 @@ public class AdminCommands extends BukkitCommand {
                         return;
                     }
 
-                    HikariInsertOptions.getInstance().setGoldPlayer(target);
+                    SubscriptionsHikariInsertOptions.getInstance().setGoldPlayer(target);
+                    gold.add(target.getName());
+                    set(gold, "Gold");
                     PermissionsUtil.givePermission(target, "essentials.kits.pyro");
                     target.sendMessage(prefix + StringUtils.format("&aYou were successfully given the &6Gold &eSubscription&a!"));
                     sender.sendMessage(prefix + StringUtils.format("&aYou have successfully given this player &6Gold &eSubscription&a!"));
@@ -77,7 +90,9 @@ public class AdminCommands extends BukkitCommand {
                         return;
                     }
 
-                    HikariInsertOptions.getInstance().setPlatinumPlayer(target);
+                    SubscriptionsHikariInsertOptions.getInstance().setPlatinumPlayer(target);
+                    platinum.add(target.getName());
+                    set(platinum, "Platinum");
                     PermissionsUtil.givePermission(target, "essentials.kits.tank");
                     target.sendMessage(prefix + StringUtils.format("&aYou were successfully given the &8Platinum &eSubscription&a!"));
                     sender.sendMessage(prefix + StringUtils.format("&aYou have successfully given this player &8Patinum &eSubscription&a!"));
@@ -86,5 +101,10 @@ public class AdminCommands extends BukkitCommand {
         });
 
         return true;
+    }
+
+    private synchronized void set(List<String> list, String path) {
+        PlayerFile.getFileConfiguration().set(path, list);
+        PlayerFile.saveFile();
     }
 }

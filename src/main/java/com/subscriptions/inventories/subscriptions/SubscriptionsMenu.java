@@ -1,8 +1,8 @@
-package com.subscriptions.inventories;
+package com.subscriptions.inventories.subscriptions;
 
 import com.subscriptions.builder.ItemBuilder;
 import com.subscriptions.config.ConfigManager;
-import com.subscriptions.main.Subscriptions;
+import com.subscriptions.inventories.handlers.InventoryInterface;
 import com.subscriptions.string.StringUtils;
 import com.subscriptions.subscriptions.api.SubscriptionsShopAPI;
 import org.bukkit.Bukkit;
@@ -52,6 +52,7 @@ public class SubscriptionsMenu implements InventoryInterface {
                         "&7Silver &eSubscription")).itemLore(
                         StringUtils.format("&c&lFeatures:"),
                         StringUtils.format("&7Access To Kit &eViking"),
+                        StringUtils.format("&7Access Exclusive Perks"),
                         StringUtils.format("&7Gain &ex0.25 &aMoney &7Perk Kill"),
                         StringUtils.format("&e2 &7Extra &6Gold &7On Drop"),
                         StringUtils.format("      "),
@@ -67,6 +68,7 @@ public class SubscriptionsMenu implements InventoryInterface {
                     "&6Gold &eSubscription")).itemLore(
                     StringUtils.format("&c&lFeatures:"),
                     StringUtils.format("&7Access To Kit &ePyro"),
+                    StringUtils.format("&7Access Exclusive Perks"),
                     StringUtils.format("&7Gain &ex0.50 &aMoney &7Per Kill"),
                     StringUtils.format("&e4 &7Extra &6Gold &7On Drop"),
                     StringUtils.format("      "),
@@ -80,6 +82,7 @@ public class SubscriptionsMenu implements InventoryInterface {
                         "&6Gold &eSubscription")).itemLore(
                         StringUtils.format("&c&lFeatures:"),
                         StringUtils.format("&7Access To Kit &ePyro"),
+                        StringUtils.format("&7Access Exclusive Perks"),
                         StringUtils.format("&7Gain &ex0.50 &aMoney &7Per Kill"),
                         StringUtils.format("&e4 &7Extra &6Gold &7On Drop"),
                         StringUtils.format("      "),

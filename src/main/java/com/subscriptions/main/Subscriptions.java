@@ -1,9 +1,13 @@
 package com.subscriptions.main;
 
 import com.subscriptions.commands.AdminCommands;
+import com.subscriptions.commands.PerkCommands;
 import com.subscriptions.commands.SubscriptionsMenuCommand;
+import com.subscriptions.file.PlayerFile;
+import com.subscriptions.listeners.CosmeticListeners;
 import com.subscriptions.listeners.SubscriptionListeners;
 import com.subscriptions.subscriptions.connection.SubscriptionsHikari;
+import com.subscriptions.tasks.TrailTask;
 import com.subscriptions.threads.SubThreads;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -23,7 +27,7 @@ public class Subscriptions extends JavaPlugin {
     public static Economy economy;
     public static Permission permission;
 
-    public void onEnable() {
+    synchronized public void onEnable() {
         plugin = this;
         registerCommands();
         registerListeners();
@@ -31,20 +35,22 @@ public class Subscriptions extends JavaPlugin {
         setupEconomy();
         setUpPermission();
         SubscriptionsHikari.getInstance().connectToDB();
+        PlayerFile.setUpFile();
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new TrailTask(), 20, 10);
     }
 
     public void onDisable() {
         SubThreads.globalThread.shutdown();
-        SubscriptionsHikari.getInstance().disconnect();
     }
 
     private void registerCommands() {
         addCommand("subsa", new AdminCommands("subsa"));
         addCommand("subscriptions", new SubscriptionsMenuCommand("subscriptions"));
+        addCommand("subperks", new PerkCommands("subperks"));
     }
 
     private void registerListeners() {
-        addListener(new SubscriptionListeners());
+        addListener(new SubscriptionListeners(), new CosmeticListeners());
     }
 
     private void registerConfig() {

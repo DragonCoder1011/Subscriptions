@@ -54,6 +54,7 @@ public class SubscriptionsHikari {
         createSilverSubscription();
         createGoldSubscription();
         createPlatinumSubscription();
+        createParticleTable();
     }
 
     private void createSilverSubscription() {
@@ -78,6 +79,15 @@ public class SubscriptionsHikari {
     private void createPlatinumSubscription() {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(PrepareStatements.CREATEPLATINUMTABLE.getStatement());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createParticleTable() {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(PrepareStatements.CREATEPARTICLESTABLE.getStatement());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

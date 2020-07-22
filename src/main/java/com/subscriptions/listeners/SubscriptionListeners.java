@@ -3,6 +3,7 @@ package com.subscriptions.listeners;
 import com.google.common.collect.Maps;
 import com.subscriptions.builder.ItemBuilder;
 import com.subscriptions.config.ConfigManager;
+import com.subscriptions.file.PlayerFile;
 import com.subscriptions.main.Subscriptions;
 import com.subscriptions.string.StringUtils;
 import com.subscriptions.subscriptions.api.SubscriptionsShopAPI;
@@ -70,22 +71,42 @@ public class SubscriptionListeners implements Listener {
     public void onMoney(PlayerDeathEvent e) {
         Player killer = e.getEntity().getKiller();
         Player killed = e.getEntity();
+        if (killer == null) return;
+        if (killer == killed) return;
         if (killed.getWorld().getName().equalsIgnoreCase("pvpworld") && killer.getWorld().getName().equalsIgnoreCase("pvpworld") ||
                 killed.getWorld().getName().equalsIgnoreCase("void") && killer.getWorld().getName().equalsIgnoreCase("void")) {
             SubThreads.globalThread.execute(() -> {
-                if (SubscriptionsShopAPI.getInstance().hasSilver(killer)) {
-                    EconomyUtil.giveMoney(killer, 2.50);
-                    killer.sendMessage(prefix + StringUtils.format("&7Here's an extra &e2.50 &7from your Silver &eSubscription&7!"));
-                }
+                if (SubscriptionsShopAPI.getInstance().hasSilver(killer) && SubscriptionsShopAPI.getInstance().hasGold(killer)
+                        && SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
+                    EconomyUtil.giveMoney(killer, 15.00);
+                    killer.sendMessage(prefix + StringUtils.format(
+                            "&7Here's an extra &e15.00 &7from your &7Silver, &6Gold&7, And &8Platinum &eSubscription&7!"));
 
-                if (SubscriptionsShopAPI.getInstance().hasGold(killer)) {
-                    EconomyUtil.giveMoney(killer, 5.00);
-                    killer.sendMessage(prefix + StringUtils.format("&7Here's an extra &e5.00 &7from your &6Gold &eSubscription&7!"));
-                }
-
-                if (SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
+                } else if (SubscriptionsShopAPI.getInstance().hasSilver(killer) && SubscriptionsShopAPI.getInstance().hasGold(killer)) {
                     EconomyUtil.giveMoney(killer, 7.50);
-                    killer.sendMessage(prefix + StringUtils.format("&7Here's an extra &e7.50 &7from your &8Platinum &eSubscription&7!"));
+                    killer.sendMessage(prefix + StringUtils.format(
+                            "&7Here's an extra &e7.50 &7from your &7Silver, And &6Gold &eSubscription&7!"));
+                } else if (SubscriptionsShopAPI.getInstance().hasSilver(killer) && SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
+                    EconomyUtil.giveMoney(killer, 10.00);
+                    killer.sendMessage(prefix + StringUtils.format(
+                            "&7Here's an extra &e7.50 &7from your &7Silver, And &8Platinum &eSubscription&7!"));
+
+                } else if (SubscriptionsShopAPI.getInstance().hasGold(killer) && SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
+                    EconomyUtil.giveMoney(killer, 12.50);
+                    killer.sendMessage(prefix + StringUtils.format(
+                            "&7Here's an extra &e12.50 &7from your &6Gold&7, And &8Platinum &eSubscription&7!"));
+                } else if (SubscriptionsShopAPI.getInstance().hasSilver(killer)) {
+                    EconomyUtil.giveMoney(killer, 2.50);
+                    killer.sendMessage(prefix + StringUtils.format(
+                            "&7Here's an extra &e2.50 &7from your &7Silver &eSubscription&7!"));
+                } else if (SubscriptionsShopAPI.getInstance().hasGold(killer)) {
+                    EconomyUtil.giveMoney(killer, 5.00);
+                    killer.sendMessage(prefix + StringUtils.format(
+                            "&7Here's an extra &e5.00 &7from your &6Gold &eSubscription&7!"));
+                } else if (SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
+                    EconomyUtil.giveMoney(killer, 7.50);
+                    killer.sendMessage(prefix + StringUtils.format(
+                            "&7Here's an extra &e7.50 &7from your &8Platinum &eSubscription&7!"));
                 }
             });
         }

@@ -1,9 +1,6 @@
 package com.subscriptions.subscriptions.connection;
 
-import com.subscriptions.main.Subscriptions;
-import com.subscriptions.string.StringUtils;
 import com.subscriptions.subscriptions.enums.PrepareStatements;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -11,12 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class HikariInsertOptions {
+public class SubscriptionsHikariInsertOptions {
 
-    private static HikariInsertOptions instance = null;
+    private static SubscriptionsHikariInsertOptions instance = null;
 
-    public static synchronized HikariInsertOptions getInstance() {
-        if (instance == null) instance = new HikariInsertOptions();
+    public static synchronized SubscriptionsHikariInsertOptions getInstance() {
+        if (instance == null) instance = new SubscriptionsHikariInsertOptions();
         return instance;
     }
 

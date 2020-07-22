@@ -1,15 +1,16 @@
 package com.subscriptions.commands;
 
-import com.subscriptions.inventories.subscriptions.SubscriptionsMenu;
+import com.subscriptions.inventories.subscriptions.SubscriptionsPerksMenu;
 import com.subscriptions.threads.SubThreads;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
-public class SubscriptionsMenuCommand extends BukkitCommand {
+public class PerkCommands extends BukkitCommand {
 
-    public SubscriptionsMenuCommand(String name) {
+
+    public PerkCommands(String name) {
         super(name);
     }
 
@@ -22,10 +23,11 @@ public class SubscriptionsMenuCommand extends BukkitCommand {
             }
 
             Player player = (Player) sender;
-            SubscriptionsMenu.getInstance().init(player);
+            SubscriptionsPerksMenu.getInstance().init(player);
             player.playSound(player.getLocation(), Sound.CHEST_OPEN, 1, 1);
         });
 
         return true;
     }
 }
+
