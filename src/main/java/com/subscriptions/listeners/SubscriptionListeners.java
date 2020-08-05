@@ -1,9 +1,9 @@
 package com.subscriptions.listeners;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.subscriptions.builder.ItemBuilder;
 import com.subscriptions.config.ConfigManager;
-import com.subscriptions.file.PlayerFile;
 import com.subscriptions.main.Subscriptions;
 import com.subscriptions.string.StringUtils;
 import com.subscriptions.subscriptions.api.SubscriptionsShopAPI;
@@ -13,22 +13,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.BiConsumer;
 
 public class SubscriptionListeners implements Listener {
 
     private final String prefix = StringUtils.format("&c&lKitPvP &8» ");
-    private final Map<String, ItemStack> silverMap = Maps.newConcurrentMap();
-    private final Map<String, ItemStack> goldMap = Maps.newConcurrentMap();
-    private final Map<String, ItemStack> platinumMap = Maps.newConcurrentMap();
+    private final List<String> silverList = Collections.synchronizedList(Lists.newArrayList());
+    private final List<String> goldList = Collections.synchronizedList(Lists.newArrayList());
+    private final List<String> platinumList = Collections.synchronizedList(Lists.newArrayList());
+
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
@@ -68,7 +70,7 @@ public class SubscriptionListeners implements Listener {
     }
 
     @EventHandler
-    public void onMoney(PlayerDeathEvent e) {
+    public void onDrops(PlayerDeathEvent e) {
         Player killer = e.getEntity().getKiller();
         Player killed = e.getEntity();
         if (killer == null) return;
@@ -80,33 +82,33 @@ public class SubscriptionListeners implements Listener {
                         && SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
                     EconomyUtil.giveMoney(killer, 15.00);
                     killer.sendMessage(prefix + StringUtils.format(
-                            "&7Here's an extra &e15.00 &7from your &7Silver, &6Gold&7, And &8Platinum &eSubscription&7!"));
+                            "&7Here's an extra &6$15.00 &7from your &7Silver, &6Gold&7, And &8Platinum &eSubscription&7!"));
 
                 } else if (SubscriptionsShopAPI.getInstance().hasSilver(killer) && SubscriptionsShopAPI.getInstance().hasGold(killer)) {
                     EconomyUtil.giveMoney(killer, 7.50);
                     killer.sendMessage(prefix + StringUtils.format(
-                            "&7Here's an extra &e7.50 &7from your &7Silver, And &6Gold &eSubscription&7!"));
+                            "&7Here's an extra &6$7.50 &7from your &7Silver, And &6Gold &eSubscription&7!"));
                 } else if (SubscriptionsShopAPI.getInstance().hasSilver(killer) && SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
                     EconomyUtil.giveMoney(killer, 10.00);
                     killer.sendMessage(prefix + StringUtils.format(
-                            "&7Here's an extra &e7.50 &7from your &7Silver, And &8Platinum &eSubscription&7!"));
+                            "&7Here's an extra &6$7.50 &7from your &7Silver, And &8Platinum &eSubscription&7!"));
 
                 } else if (SubscriptionsShopAPI.getInstance().hasGold(killer) && SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
                     EconomyUtil.giveMoney(killer, 12.50);
                     killer.sendMessage(prefix + StringUtils.format(
-                            "&7Here's an extra &e12.50 &7from your &6Gold&7, And &8Platinum &eSubscription&7!"));
+                            "&7Here's an extra &6$12.50 &7from your &6Gold&7, And &8Platinum &eSubscription&7!"));
                 } else if (SubscriptionsShopAPI.getInstance().hasSilver(killer)) {
                     EconomyUtil.giveMoney(killer, 2.50);
                     killer.sendMessage(prefix + StringUtils.format(
-                            "&7Here's an extra &e2.50 &7from your &7Silver &eSubscription&7!"));
+                            "&7Here's an extra &6$2.50 &7from your &7Silver &eSubscription&7!"));
                 } else if (SubscriptionsShopAPI.getInstance().hasGold(killer)) {
                     EconomyUtil.giveMoney(killer, 5.00);
                     killer.sendMessage(prefix + StringUtils.format(
-                            "&7Here's an extra &e5.00 &7from your &6Gold &eSubscription&7!"));
+                            "&7Here's an extra &6$5.00 &7from your &6Gold &eSubscription&7!"));
                 } else if (SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
                     EconomyUtil.giveMoney(killer, 7.50);
                     killer.sendMessage(prefix + StringUtils.format(
-                            "&7Here's an extra &e7.50 &7from your &8Platinum &eSubscription&7!"));
+                            "&7Here's an extra &6$7.50 &7from your &8Platinum &eSubscription&7!"));
                 }
             });
         }
@@ -114,53 +116,61 @@ public class SubscriptionListeners implements Listener {
         double chance = ThreadLocalRandom.current().nextDouble(0, 1);
         double goldRate = ConfigManager.getConfigManager().getDouble("gold-drop-rate");
         if (chance <= goldRate) {
-            SubThreads.globalThread.execute(() -> {
-                ItemStack silver = ItemBuilder.Builder.getInstance().itemType(Material.GOLD_INGOT).itemAmount(2).
-                        itemName(StringUtils.format("&6&lGolden Artifact")).itemLore(
-                        StringUtils.format("&eUse these to trade into the Gold Shop!")).build();
-                ItemStack gold = ItemBuilder.Builder.getInstance().itemType(Material.GOLD_INGOT).itemAmount(4).
-                        itemName(StringUtils.format("&6&lGolden Artifact")).itemLore(
-                        StringUtils.format("&eUse these to trade into the Gold Shop!")).build();
-                ItemStack platinum = ItemBuilder.Builder.getInstance().itemType(Material.GOLD_INGOT).itemAmount(6).
-                        itemName(StringUtils.format("&6&lGolden Artifact")).itemLore(
-                        StringUtils.format("&eUse these to trade into the Gold Shop!")).build();
+            ItemStack silver = ItemBuilder.Builder.getInstance().itemType(Material.GOLD_INGOT).itemAmount(2).
+                    itemName(StringUtils.format("&6&lGolden Artifact")).itemLore(
+                    StringUtils.format("&eUse these to trade into the Gold Shop!")).build();
+            ItemStack gold = ItemBuilder.Builder.getInstance().itemType(Material.GOLD_INGOT).itemAmount(4).
+                    itemName(StringUtils.format("&6&lGolden Artifact")).itemLore(
+                    StringUtils.format("&eUse these to trade into the Gold Shop!")).build();
+            ItemStack platinum = ItemBuilder.Builder.getInstance().itemType(Material.GOLD_INGOT).itemAmount(6).
+                    itemName(StringUtils.format("&6&lGolden Artifact")).itemLore(
+                    StringUtils.format("&eUse these to trade into the Gold Shop!")).build();
+
+            CompletableFuture.runAsync(() -> {
 
                 if (SubscriptionsShopAPI.getInstance().hasSilver(killer)) {
-                    silverMap.put(killer.getName(), silver);
+                    silverList.add(killer.getName());
+                    killer.sendMessage(prefix + StringUtils.format("&e+2 &6&lGolden Artifacts &7have dropped!"));
+
                 }
 
                 if (SubscriptionsShopAPI.getInstance().hasGold(killer)) {
-                    goldMap.put(killer.getName(), gold);
+                    goldList.add(killer.getName());
+                    killer.sendMessage(prefix + StringUtils.format("&e+4 &6&lGolden Artifacts &7have dropped!"));
+
                 }
 
                 if (SubscriptionsShopAPI.getInstance().hasPlatinum(killer)) {
-                    platinumMap.put(killer.getName(), platinum);
+                    platinumList.add(killer.getName());
+                    killer.sendMessage(prefix + StringUtils.format("&e+6 &6&lGolden Artifacts &7have dropped!"));
                 }
-            });
+            }).whenCompleteAsync((aVoid, throwable) -> Bukkit.getScheduler().runTaskLater(Subscriptions.plugin, () -> {
 
-            if (!silverMap.containsKey(killer.getName()) || !goldMap.containsKey(killer.getName()) || !platinumMap.containsKey(killer.getName())) {
-                return;
-            }
+                if (silverList.contains(killer.getName())) {
+                    killer.getWorld().dropItem(killer.getLocation(), silver);
+                    silverList.remove(killer.getName());
+                }
 
-            killer.getWorld().dropItem(killer.getLocation(), silverMap.get(killer.getName()));
-            silverMap.remove(killer.getName());
+                if (goldList.contains(killer.getName())) {
+                    killer.getWorld().dropItem(killer.getLocation(), gold);
+                    goldList.remove(killer.getName());
+                }
 
-            killer.getWorld().dropItem(killer.getLocation(), goldMap.get(killer.getName()));
-            goldMap.remove(killer.getName());
-
-            killer.getWorld().dropItem(killer.getLocation(), platinumMap.get(killer.getName()));
-            platinumMap.remove(killer.getName());
+                if (platinumList.contains(killer.getName())) {
+                    killer.getWorld().dropItem(killer.getLocation(), platinum);
+                    platinumList.remove(killer.getName());
+                }
+            }, 20));
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        String name = p.getName();
-        if (silverMap.containsKey(name) || goldMap.containsKey(name) || platinumMap.containsKey(name)) {
-            silverMap.remove(name);
-            goldMap.remove(name);
-            platinumMap.remove(name);
+    @EventHandler
+    public void removeListDataOnQuit(PlayerQuitEvent e) {
+        String name = e.getPlayer().getName();
+        if (silverList.contains(name) || goldList.contains(name) || platinumList.contains(name)) {
+            silverList.remove(name);
+            goldList.remove(name);
+            platinumList.remove(name);
         }
     }
 }

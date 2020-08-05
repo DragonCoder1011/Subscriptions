@@ -68,8 +68,9 @@ public class SubscriptionsHikari {
 
     private void createGoldSubscription() {
         try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(PrepareStatements.CREATEGOLDTABLE.getStatement());
-            statement.executeUpdate();
+            try (PreparedStatement statement = connection.prepareStatement(PrepareStatements.CREATEGOLDTABLE.getStatement())) {
+                statement.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

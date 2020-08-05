@@ -1,7 +1,5 @@
 package com.subscriptions.subscriptions.connection;
 
-import org.bukkit.Bukkit;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

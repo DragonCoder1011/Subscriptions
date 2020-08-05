@@ -27,7 +27,7 @@ public class SubscriptionsPerksMenu implements InventoryInterface {
 
     @Override
     public void create() {
-        inventory = Bukkit.createInventory(null, 27, StringUtils.format("&7Subscription Perks Menu"));
+        inventory = Bukkit.createInventory(null, 36, StringUtils.format("&7Subscription Perks Menu"));
     }
 
     @Override
@@ -59,6 +59,9 @@ public class SubscriptionsPerksMenu implements InventoryInterface {
                 StringUtils.format("&7● &cMusic"),
                 StringUtils.format("&7● &aEmerald"),
                 StringUtils.format("&c&lMore Perks To Come")).build());
+
+        inventory.setItem(31, ItemBuilder.Builder.getInstance().itemType(Material.BARRIER).itemName(StringUtils.format("&cReset Particle"))
+                .itemAmount(1).itemLore(StringUtils.format("&7Click To Reset Your Trail!")).build());
     }
 
     @Override

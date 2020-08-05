@@ -6,6 +6,7 @@ import com.subscriptions.commands.SubscriptionsMenuCommand;
 import com.subscriptions.file.PlayerFile;
 import com.subscriptions.listeners.CosmeticListeners;
 import com.subscriptions.listeners.SubscriptionListeners;
+import com.subscriptions.subscriptions.api.TrailsAPI;
 import com.subscriptions.subscriptions.connection.SubscriptionsHikari;
 import com.subscriptions.tasks.TrailTask;
 import com.subscriptions.threads.SubThreads;
@@ -14,6 +15,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -40,6 +42,9 @@ public class Subscriptions extends JavaPlugin {
     }
 
     public void onDisable() {
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            TrailsAPI.getInstance().resetParticles(all);
+        }
         SubThreads.globalThread.shutdown();
     }
 

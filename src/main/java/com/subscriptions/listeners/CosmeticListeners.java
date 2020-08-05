@@ -4,12 +4,14 @@ import com.subscriptions.builder.ItemBuilder;
 import com.subscriptions.inventories.gold.GoldCosmeticsMenu;
 import com.subscriptions.inventories.platinum.PlatinumCosmeticsMenu;
 import com.subscriptions.inventories.silver.SilverCosmeticsMenu;
+import com.subscriptions.main.Subscriptions;
 import com.subscriptions.string.StringUtils;
 import com.subscriptions.subscriptions.api.TrailsAPI;
 import com.subscriptions.subscriptions.api.SubscriptionsShopAPI;
 import com.subscriptions.subscriptions.connection.CosmeticsHikariInsertOptions;
 import com.subscriptions.subscriptions.enums.PrepareStatements;
 import com.subscriptions.threads.SubThreads;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +40,7 @@ public class CosmeticListeners implements Listener {
         if (e.getInventory().getTitle().equalsIgnoreCase(StringUtils.format("&7Subscription Perks Menu"))) {
             if (ItemBuilder.hasDisplayName(e.getCurrentItem())) {
                 String item = e.getCurrentItem().getItemMeta().getDisplayName();
-                if (item.contains(StringUtils.format("&eSubscriptions"))) {
+                if (item.contains(StringUtils.format("&eSubscriptions")) || item.contains(StringUtils.format("&cReset Particle"))) {
                     e.setCancelled(true);
                 }
 
@@ -80,6 +82,13 @@ public class CosmeticListeners implements Listener {
                         }
                     }
                 }
+
+                if (item.equalsIgnoreCase(StringUtils.format("&cReset Particle"))) {
+                    TrailsAPI.getInstance().resetParticles(player);
+                    player.sendMessage(StringUtils.format(prefix + "&7You have resetted your trail!"));
+                    player.closeInventory();
+                    player.playSound(player.getLocation(), Sound.BLAZE_DEATH, 10, 29);
+                }
             }
         }
     }
@@ -97,7 +106,7 @@ public class CosmeticListeners implements Listener {
                     e.setCancelled(true);
                 }
 
-                SubThreads.globalThread.execute(() -> {
+                Bukkit.getScheduler().runTaskAsynchronously(Subscriptions.plugin, () -> {
                     TrailsAPI api = TrailsAPI.getInstance();
                     api.chooseParticle(e.getCurrentItem(), "&cHeart &eTrail", player,
                             PrepareStatements.HEARTID.getStatement(), PrepareStatements.SETHEART.getStatement(), PrepareStatements.UPDATEHEART.getStatement());
@@ -128,7 +137,7 @@ public class CosmeticListeners implements Listener {
                     e.setCancelled(true);
                 }
 
-                SubThreads.globalThread.execute(() -> {
+                Bukkit.getScheduler().runTaskAsynchronously(Subscriptions.plugin, () -> {
                     TrailsAPI api = TrailsAPI.getInstance();
                     api.chooseParticle(e.getCurrentItem(), "&fSpark &eTrail", player,
                             PrepareStatements.SPARKID.getStatement(), PrepareStatements.SETSPARK.getStatement(), PrepareStatements.UPDATESPARK.getStatement());
@@ -159,7 +168,7 @@ public class CosmeticListeners implements Listener {
                     e.setCancelled(true);
                 }
 
-                SubThreads.globalThread.execute(() -> {
+                Bukkit.getScheduler().runTaskAsynchronously(Subscriptions.plugin, () -> {
                     TrailsAPI api = TrailsAPI.getInstance();
                     api.chooseParticle(e.getCurrentItem(), "&7Smoke &eTrail", player,
                             PrepareStatements.SMOKEID.getStatement(), PrepareStatements.SETSMOKE.getStatement(), PrepareStatements.UPDATESMOKE.getStatement());

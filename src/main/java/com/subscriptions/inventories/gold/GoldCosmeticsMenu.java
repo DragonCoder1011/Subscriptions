@@ -2,7 +2,6 @@ package com.subscriptions.inventories.gold;
 
 import com.subscriptions.builder.ItemBuilder;
 import com.subscriptions.inventories.handlers.InventoryInterface;
-import com.subscriptions.inventories.silver.SilverCosmeticsMenu;
 import com.subscriptions.string.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
